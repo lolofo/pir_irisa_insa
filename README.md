@@ -11,9 +11,9 @@ We wanted to compare the behavior of embeddings in two different situations:
 
 ## Table of contents
 
-1. [python_env](#pre_trained)
-2. [project 1](#fine_tuning)
-3. [project 2](#fine_tuned_models)
+1. [pre_trained](#pre_trained)
+2. [fine_tuning](#fine_tuning)
+3. [fine_tuned_models](#fine_tuned_models)
 
 
 
