@@ -24,8 +24,8 @@ First of all go to the root of this directory. There is two scripts and here are
 - first generate the data. The following commands will generate two objects of type **datasets** which contain the data to specialize our models.
 
 ```
-python flue-cls-prepare.py flaubert-tokens.datasets -c flaubert/flaubert_base_cased
-python flue-cls-prepare.py camembert-tokens.datasets -c camembert-base
+python flue-cls-prepare.py -c flaubert/flaubert_base_cased flaubert-tokens.datasets 
+python flue-cls-prepare.py -c camembert-base camembert-tokens.datasets
 ```
 - finally, fine tune the models. The next commands will allow to specialize the models, thanks to the data we just generated.
 
@@ -33,6 +33,8 @@ python flue-cls-prepare.py camembert-tokens.datasets -c camembert-base
 python flue-cls-finetune.py -a 5000 -b 1000 -n 1 -s ./flaubert_base_cased_1 -d flaubert-tokens.datasets -c flaubert/flaubert_base_cased
 python flue-cls-finetune.py -a 5000 -b 1000 -n 1 -s ./camembert_base_1 -d camembert-tokens.datasets -c camembert-base
 ```
+
+
 
 Thanks to all these commands we can generate all the data and models necessary for our study.
 
