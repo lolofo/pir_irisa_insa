@@ -1,2 +1,14 @@
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
+
+camembert_base_1
+
+camembert_base_2
+
+camembert-tokens.datasets
+
+flaubert_base_cased_1
+
+flaubert_base_cased_2
+
+flaubert-tokens.datasets
