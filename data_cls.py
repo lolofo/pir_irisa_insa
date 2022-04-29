@@ -30,7 +30,7 @@ class HFDataset(Dataset):
         return len(self.dset)
 
 
-def load_train_test_data(model_type='flaubert',
+def load_train_test_data(model_type: str = 'flaubert',
                          fine_tune: bool = False,
                          layer: int = 12):
     """
@@ -123,6 +123,8 @@ def load_train_test_data(model_type='flaubert',
 ### load and save the data ###
 ##############################
 
+# first for FlauBERT
+
 train_fl_12, train_label_fl_12, test_fl_12, test_label_fl_12 = load_train_test_data()
 
 with open('numpy_save/flaubert_raw_layer_12.npy', 'wb') as f:
@@ -147,3 +149,32 @@ with open('numpy_save/flaubert_ft.npy', 'wb') as f:
     np.save(f, train_label_fl_ft)
     np.save(f, test_fl_ft)
     np.save(f, test_label_fl_ft)
+
+# then for CamemBERT
+
+train_cb_12, train_label_cb_12, test_cb_12, test_label_cb_12 = load_train_test_data(model_type="camembert")
+
+with open('numpy_save/flaubert_raw_layer_12.npy', 'wb') as f:
+    np.save(f, train_cb_12)
+    np.save(f, train_label_cb_12)
+    np.save(f, test_cb_12)
+    np.save(f, test_label_cb_12)
+
+train_cb_13, train_label_cb_13, test_cb_13, test_label_cb_13 = load_train_test_data(model_type="camembert",
+                                                                                    layer=13)
+
+with open('numpy_save/flaubert_raw_layer_13.npy', 'wb') as f:
+    np.save(f, train_cb_13)
+    np.save(f, train_label_cb_13)
+    np.save(f, test_cb_13)
+    np.save(f, test_label_cb_13)
+
+train_cb_ft, train_label_cb_ft, test_cb_ft, test_label_cb_ft = load_train_test_data(model_type="camembert",
+                                                                                    fine_tune=True,
+                                                                                    layer=13)
+
+with open('numpy_save/flaubert_ft.npy', 'wb') as f:
+    np.save(f, train_cb_ft)
+    np.save(f, train_label_cb_ft)
+    np.save(f, test_cb_ft)
+    np.save(f, test_label_cb_ft)
