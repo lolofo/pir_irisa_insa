@@ -6,16 +6,16 @@ We wanted to compare the behavior of embeddings in two different situations:
 
 - First, on simply pre-trained architectures.
 
-- then on the same architectures but trained on a sentence classification task.
+- then on the same architectures but trained on a sentence classification task. (simple)
 
 
 ## Table of contents
 
-1. [fine_tuning](#fine_tuning)
-2. [models_study](#models_study)
+1. [fine_tuning](#fine-tuning)
+2. [models_study](#models-study)
 
 
-## fine_tuning
+## fine tuning
 
 In this section you will find the python scripts we used for the fine tuning of our models, and to generate our data.
 
@@ -55,7 +55,7 @@ About the parser :
 
 
 
-## models_study
+## models study
 
 Now that you have created the data and models for our study, you can come and run the two notebooks in this directory. There are two notebooks :
 
@@ -63,7 +63,17 @@ Now that you have created the data and models for our study, you can come and ru
 
 - **fine_tuning_study.ipynb** this notebook contains a very similar study, but this time conducted on models that were specialized using the scripts written in the previous section.
 
+## Convergence and Performance
 
+After these two study we made some different observations about the convergence of the cosines through the layers. 
+The objective of this final part is now to see if there is any links between this convergence of the cosines and the performance in the classification task.
+To answer this question we will take the embedding of the CLS tokens on different layers. To get these embeddings you can execute the following command line :
+
+```
+python data_cls.py
+```
+
+With this command line you will get all the files that are necessary to run the notebook **cls_study.ipynb**
 
 
 

@@ -12,3 +12,5 @@ flaubert_base_cased_1
 flaubert_base_cased_2
 
 flaubert-tokens.datasets
+
+numpy_save
