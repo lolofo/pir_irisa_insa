@@ -34,8 +34,6 @@ python flue-cls-finetune.py -a 5000 -b 1000 -n 1 -s ./flaubert_base_cased_1 -d f
 python flue-cls-finetune.py -a 5000 -b 1000 -n 1 -s ./camembert_base_1 -d camembert-tokens.datasets -c camembert-base
 ```
 
-
-
 Thanks to all these commands we can generate all the data and models necessary for our study.
 
 About the parser :
@@ -67,13 +65,13 @@ Now that you have created the data and models for our study, you can come and ru
 
 After these two study we made some different observations about the convergence of the cosines through the layers. 
 The objective of this final part is now to see if there is any links between this convergence of the cosines and the performance in the classification task.
-To answer this question we will take the embedding of the CLS tokens on different layers. To get these embeddings you can execute the following command line :
+To answer this question we will first take the embedding of the *[CLS]* tokens on different layers. To get these embeddings you can execute the following command line :
 
 ```
 python data_cls.py
 ```
 
-With this command line you will get all the files that are necessary to run the notebook **cls_study.ipynb**
+With this command line you will get all the files that are necessary to run the notebook **cls_study.ipynb**.
 
 
 
