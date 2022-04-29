@@ -11,8 +11,9 @@ We wanted to compare the behavior of embeddings in two different situations:
 
 ## Table of contents
 
-1. [fine_tuning](#fine-tuning)
-2. [models_study](#models-study)
+1. [fine tuning](#fine-tuning)
+2. [models study](#models-study)
+3. [convergence and performance](#convergence-and-performance)
 
 
 ## fine tuning
