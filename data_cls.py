@@ -4,6 +4,8 @@ import numpy as np
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
 
+import argparse
+
 from transformers import FlaubertForSequenceClassification
 from transformers import CamembertForSequenceClassification
 
@@ -17,6 +19,22 @@ tokenized_datasets_flaubert = datasets.load_from_disk(datadir_flaubert)
 
 device = torch.device("cpu")
 
+######################
+### The batch size ###
+######################
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-b", "--batch_size", type=int)
+args = parser.parse_args()
+
+batch = 4  # default batch : 4
+if args.batch_size is not None:
+    batch = args.batch_size
+
+
+#############################################
+### Transform the data into torch dataset ###
+#############################################
 
 class HFDataset(Dataset):
     def __init__(self, dset):
@@ -29,6 +47,10 @@ class HFDataset(Dataset):
     def __len__(self):
         return len(self.dset)
 
+
+############################################
+### function to get the embedding of CLS ###
+############################################
 
 def load_train_test_data(model_type: str = 'flaubert',
                          fine_tune: bool = False,
@@ -84,8 +106,8 @@ def load_train_test_data(model_type: str = 'flaubert',
 
     # with a better computer choose a batch_size much more larger !
     # It will be faster
-    train_dl = DataLoader(train_dataset, batch_size=4)
-    test_dl = DataLoader(test_dataset, batch_size=4)
+    train_dl = DataLoader(train_dataset, batch_size=batch)
+    test_dl = DataLoader(test_dataset, batch_size=batch)
 
     train_array = None
     train_label = None
@@ -125,6 +147,7 @@ def load_train_test_data(model_type: str = 'flaubert',
 
 # first for FlauBERT
 
+"""
 train_fl_12, train_label_fl_12, test_fl_12, test_label_fl_12 = load_train_test_data()
 
 with open('numpy_save/flaubert_raw_layer_12.npy', 'wb') as f:
@@ -149,6 +172,7 @@ with open('numpy_save/flaubert_ft.npy', 'wb') as f:
     np.save(f, train_label_fl_ft)
     np.save(f, test_fl_ft)
     np.save(f, test_label_fl_ft)
+"""
 
 # then for CamemBERT
 
