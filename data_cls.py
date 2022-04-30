@@ -86,7 +86,7 @@ def load_train_test_data(model_type: str = 'flaubert',
 
         if fine_tune:
             # we use the model we fine tuned on 1 epoch
-            model = FlaubertForSequenceClassification.from_pretrained('./camembert_base_1',
+            model = CamembertForSequenceClassification.from_pretrained('./camembert_base_1',
                                                                       num_labels=2,
                                                                       output_attentions=False,
                                                                       output_hidden_states=True)
@@ -176,7 +176,7 @@ with open('numpy_save/flaubert_ft.npy', 'wb') as f:
 """
 
 # then for CamemBERT
-
+"""
 train_cb_12, train_label_cb_12, test_cb_12, test_label_cb_12 = load_train_test_data(model_type="camembert")
 
 with open('numpy_save/camembert_raw_layer_12.npy', 'wb') as f:
@@ -193,10 +193,10 @@ with open('numpy_save/camembert_raw_layer_13.npy', 'wb') as f:
     np.save(f, train_label_cb_13)
     np.save(f, test_cb_13)
     np.save(f, test_label_cb_13)
-
+"""
 train_cb_ft, train_label_cb_ft, test_cb_ft, test_label_cb_ft = load_train_test_data(model_type="camembert",
                                                                                     fine_tune=True,
-                                                                                    layer=13)
+                                                                                    layer=14)
 
 with open('numpy_save/camembert_ft.npy', 'wb') as f:
     np.save(f, train_cb_ft)
