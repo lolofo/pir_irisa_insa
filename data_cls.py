@@ -59,6 +59,7 @@ def load_train_test_data(model_type: str = 'flaubert',
     :param model_type: flaubert or camembert model
     :param fine_tune: model fine tune or raw models
     :param layer: from which layer we take the token CLS
+
     :return: two numpy arrays one for the training one for the test part
     """
 
