@@ -30,6 +30,12 @@ python flue-cls-prepare.py -c flaubert/flaubert_base_cased flaubert-tokens.datas
 python flue-cls-prepare.py -c camembert-base camembert-tokens.datasets
 ```
 
+Make sure that after these two lines of code you have these two folders :
+
+**flaubert-tokens.datasets**
+
+**camembert-tokens.datasets**
+
 - finally, fine tune the models. The next commands will allow to specialize the models, thanks to the data we just
   generated.
 

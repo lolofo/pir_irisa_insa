@@ -16,6 +16,7 @@ savedir = None
 
 datadir = None
 
+
 # ===================================================================
 #
 # define a number of constants we'll be using
@@ -25,7 +26,8 @@ def usage():
     print('Synopsis:')
     print('  Finetune model on the FLUE/CLS task.')
     print('Options:')
-    print('   -d, --datasets=s        load tokenized datasets from directory d (default: load and tokenize datasets from hub)')
+    print(
+        '   -d, --datasets=s        load tokenized datasets from directory d (default: load and tokenize datasets from hub)')
     print('   -a, --num-train=n       set number of training samples (default: all)')
     print('   -b, --num-test=n        set number of test samples (default: {})'.format(numtests))
     print('   -c, --checkpoint=s      set checkpoint to finetune (default: {})'.format(checkpoint))
@@ -33,14 +35,16 @@ def usage():
     print("   -s, --save=s            save model to directory s (default: checkpoint's basename)")
     print('   -h, --help              print this help')
 
+
 # ===================================================================
 #
 # parse command line
 #
 try:
-    opts, args = getopt.getopt(sys.argv[1:], "ha:b:c:n:s:d:", ["help", "num-train=", "num-test=", "checkpoint=", "num-epochs=", "save=", "dataset="])
+    opts, args = getopt.getopt(sys.argv[1:], "ha:b:c:n:s:d:",
+                               ["help", "num-train=", "num-test=", "checkpoint=", "num-epochs=", "save=", "dataset="])
 except getopt.GetoptError as err:
-    print(err) # will print something like "option -a not recognized"
+    print(err)  # will print something like "option -a not recognized"
     sys.exit(1)
 
 # print(opts)
@@ -66,7 +70,7 @@ for o, a in opts:
 
 if savedir == None:
     savedir = os.path.basename(checkpoint)
-    
+
 # ===================================================================
 #
 # now do the job
@@ -87,7 +91,6 @@ if datadir == None:
     for split in datasets.keys():
         logging.info('loaded {} entries from {} split'.format(len(datasets[split]), split))
 
-
     #
     # Load tokenizer
     #
@@ -95,8 +98,8 @@ if datadir == None:
     logging.info('loading tokenizer for {}'.format(checkpoint))
 
     from transformers import AutoTokenizer
-    tokenizer = AutoTokenizer.from_pretrained(checkpoint)
 
+    tokenizer = AutoTokenizer.from_pretrained(checkpoint)
 
     #
     # tokenize dataset
@@ -104,7 +107,8 @@ if datadir == None:
 
     logging.info('tokenizing datasets')
 
-    tokenized_datasets = datasets.map(lambda x: tokenizer(x['text'], padding="max_length", truncation=True), batched=True)
+    tokenized_datasets = datasets.map(lambda x: tokenizer(x['text'], padding="max_length", truncation=True),
+                                      batched=True)
 
 else:
 
@@ -113,10 +117,11 @@ else:
     tokenized_datasets = load_from_disk(datadir)
     for split in tokenized_datasets.keys():
         logging.info('loaded {} entries from {} split'.format(len(tokenized_datasets[split]), split))
-   
 
-train_dataset = tokenized_datasets["train"].shuffle(seed=42).select(range(ntrains)) if ntrains != None else tokenized_datasets["train"].shuffle(seed=42)
-test_dataset = tokenized_datasets["test"].shuffle(seed=42).select(range(ntests)) if ntests != None else tokenized_datasets["test"].shuffle(seed=42)
+train_dataset = tokenized_datasets["train"].shuffle(seed=42).select(range(ntrains)) if ntrains != None else \
+tokenized_datasets["train"].shuffle(seed=42)
+test_dataset = tokenized_datasets["test"].shuffle(seed=42).select(range(ntests)) if ntests != None else \
+tokenized_datasets["test"].shuffle(seed=42)
 
 #
 # load model
@@ -125,6 +130,7 @@ test_dataset = tokenized_datasets["test"].shuffle(seed=42).select(range(ntests))
 logging.info('loading model from {}'.format(checkpoint))
 
 from transformers import AutoModelForSequenceClassification
+
 model = AutoModelForSequenceClassification.from_pretrained(checkpoint, num_labels=2)
 
 #
@@ -136,6 +142,7 @@ from datasets import load_metric
 
 metric = load_metric("accuracy")
 
+
 def compute_metrics(eval_pred):
     logits, labels = eval_pred
     predictions = np.argmax(logits, axis=-1)
@@ -143,9 +150,11 @@ def compute_metrics(eval_pred):
 
 
 from transformers import TrainingArguments
+
 training_args = TrainingArguments("flaubert-cls-finetune", num_train_epochs=nepochs)
 
 from transformers import Trainer
+
 trainer = Trainer(
     model=model,
     args=training_args,
@@ -165,6 +174,3 @@ out = trainer.evaluate()
 print(out)
 
 logging.info("BYE!")
-
-
-

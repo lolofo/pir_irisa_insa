@@ -23,6 +23,7 @@ def usage():
     print('   -c, --checkpoint=s      set checkpoint to finetune (default: {})'.format(checkpoint))
     print('   -h, --help              print this help')
 
+
 # ===================================================================
 #
 # parse command line
@@ -30,7 +31,7 @@ def usage():
 try:
     opts, args = getopt.getopt(sys.argv[1:], "hc:", ["help", "checkpoint="])
 except getopt.GetoptError as err:
-    print(err) # will print something like "option -a not recognized"
+    print(err)  # will print something like "option -a not recognized"
     sys.exit(1)
 
 for o, a in opts:
@@ -60,10 +61,10 @@ out = args[0]
 logging.info('loading dataset')
 
 from datasets import load_dataset
+
 datasets = load_dataset("flue", "CLS")
 for split in datasets.keys():
     logging.info('loaded {} entries from {} split'.format(len(datasets[split]), split))
-
 
 #
 # Load tokenizer
@@ -72,8 +73,8 @@ for split in datasets.keys():
 logging.info('loading tokenizer for {}'.format(checkpoint))
 
 from transformers import AutoTokenizer
-tokenizer = AutoTokenizer.from_pretrained(checkpoint)
 
+tokenizer = AutoTokenizer.from_pretrained(checkpoint)
 
 #
 # tokenize dataset
@@ -82,7 +83,6 @@ tokenizer = AutoTokenizer.from_pretrained(checkpoint)
 logging.info('tokenizing datasets')
 
 tokenized_datasets = datasets.map(lambda x: tokenizer(x['text'], padding="max_length", truncation=True), batched=True)
-
 
 #
 # tokenize dataset
@@ -93,6 +93,3 @@ logging.info('saving datasets to file {}'.format(out))
 tokenized_datasets.save_to_disk(out)
 
 logging.info("BYE!")
-
-
-

@@ -87,9 +87,9 @@ def load_train_test_data(model_type: str = 'flaubert',
         if fine_tune:
             # we use the model we fine tuned on 1 epoch
             model = CamembertForSequenceClassification.from_pretrained('./camembert_base_1',
-                                                                      num_labels=2,
-                                                                      output_attentions=False,
-                                                                      output_hidden_states=True)
+                                                                       num_labels=2,
+                                                                       output_attentions=False,
+                                                                       output_hidden_states=True)
         else:
             # we use the raw model from the huggin face library
             model = CamembertForSequenceClassification.from_pretrained('camembert-base',
@@ -99,6 +99,7 @@ def load_train_test_data(model_type: str = 'flaubert',
 
     # model to the cpu
     model.to(device)
+    model.eval()
 
     # creation of dataloader
     train_dataset = HFDataset(dataset["train"])
@@ -147,7 +148,6 @@ def load_train_test_data(model_type: str = 'flaubert',
 
 # first for FlauBERT
 
-"""
 train_fl_12, train_label_fl_12, test_fl_12, test_label_fl_12 = load_train_test_data()
 
 with open('numpy_save/flaubert_raw_layer_12.npy', 'wb') as f:
@@ -172,11 +172,9 @@ with open('numpy_save/flaubert_ft.npy', 'wb') as f:
     np.save(f, train_label_fl_ft)
     np.save(f, test_fl_ft)
     np.save(f, test_label_fl_ft)
-    
-"""
 
 # then for CamemBERT
-"""
+
 train_cb_12, train_label_cb_12, test_cb_12, test_label_cb_12 = load_train_test_data(model_type="camembert")
 
 with open('numpy_save/camembert_raw_layer_12.npy', 'wb') as f:
@@ -193,10 +191,10 @@ with open('numpy_save/camembert_raw_layer_13.npy', 'wb') as f:
     np.save(f, train_label_cb_13)
     np.save(f, test_cb_13)
     np.save(f, test_label_cb_13)
-"""
+
 train_cb_ft, train_label_cb_ft, test_cb_ft, test_label_cb_ft = load_train_test_data(model_type="camembert",
                                                                                     fine_tune=True,
-                                                                                    layer=14)
+                                                                                    layer=13)
 
 with open('numpy_save/camembert_ft.npy', 'wb') as f:
     np.save(f, train_cb_ft)
