@@ -53,14 +53,13 @@ class HFDataset(Dataset):
 ############################################
 
 def load_train_test_data(model_type: str = 'flaubert',
-                         fine_tune: bool = False,
-                         layer: int = 12):
+                         fine_tune: bool = False
+                         ):
     """
     :param model_type: flaubert or camembert model
     :param fine_tune: model fine tune or raw models
-    :param layer: from which layer we take the token CLS
 
-    :return: two numpy arrays one for the training one for the test part
+    :return: tuple of numpy arrays
     """
 
     model = None
@@ -111,94 +110,157 @@ def load_train_test_data(model_type: str = 'flaubert',
     train_dl = DataLoader(train_dataset, batch_size=batch)
     test_dl = DataLoader(test_dataset, batch_size=batch)
 
-    train_array = None
+    train_array_5 = None
+    train_array_7 = None
+    train_array_9 = None
+    train_array_11 = None
+    train_array_12 = None
     train_label = None
-    test_array = None
+
+    test_array_5 = None
+    test_array_7 = None
+    test_array_9 = None
+    test_array_11 = None
+    test_array_12 = None
     test_label = None
 
     with torch.no_grad():
         for i, data in enumerate(tqdm.tqdm(train_dl)):
             input_ids, attention_mask, labels = data[0].to(device), data[1].to(device), data[2].to(device)
             outputs = model(input_ids=input_ids, attention_mask=attention_mask)
-            buff = outputs.hidden_states[layer - 1][:, 0, :].detach().numpy()
             if i == 0:
-                train_array = buff
+                train_array_5 = outputs.hidden_states[5][:, 0, :].detach().numpy()
+                train_array_7 = outputs.hidden_states[7][:, 0, :].detach().numpy()
+                train_array_9 = outputs.hidden_states[9][:, 0, :].detach().numpy()
+                train_array_11 = outputs.hidden_states[11][:, 0, :].detach().numpy()
+                train_array_12 = outputs.hidden_states[12][:, 0, :].detach().numpy()
                 train_label = labels
             else:
-                train_array = np.concatenate((train_array, buff), axis=0)
+                train_array_5 = np.concatenate((train_array_5, outputs.hidden_states[5][:, 0, :].detach().numpy()),
+                                               axis=0)
+                train_array_7 = np.concatenate((train_array_7, outputs.hidden_states[7][:, 0, :].detach().numpy()),
+                                               axis=0)
+                train_array_9 = np.concatenate((train_array_9, outputs.hidden_states[9][:, 0, :].detach().numpy()),
+                                               axis=0)
+                train_array_11 = np.concatenate((train_array_11, outputs.hidden_states[11][:, 0, :].detach().numpy()),
+                                                axis=0)
+                train_array_12 = np.concatenate((train_array_12, outputs.hidden_states[12][:, 0, :].detach().numpy()),
+                                                axis=0)
                 train_label = np.concatenate((train_label, labels), axis=0)
 
     with torch.no_grad():
         for i, data in enumerate(tqdm.tqdm(test_dl)):
             input_ids, attention_mask, labels = data[0].to(device), data[1].to(device), data[2].to(device)
             outputs = model(input_ids=input_ids, attention_mask=attention_mask)
-            buff = outputs.hidden_states[layer - 1][:, 0, :].detach().numpy()
             if i == 0:
-                test_array = buff
-                test_label = labels.detach().numpy()
+                test_array_5 = outputs.hidden_states[5][:, 0, :].detach().numpy()
+                test_array_7 = outputs.hidden_states[7][:, 0, :].detach().numpy()
+                test_array_9 = outputs.hidden_states[9][:, 0, :].detach().numpy()
+                test_array_11 = outputs.hidden_states[11][:, 0, :].detach().numpy()
+                test_array_12 = outputs.hidden_states[12][:, 0, :].detach().numpy()
+                test_label = labels
             else:
-                test_array = np.concatenate((test_array, buff), axis=0)
-                test_label = np.concatenate((test_label, labels.detach().numpy()), axis=0)
+                test_array_5 = np.concatenate((test_array_5, outputs.hidden_states[5][:, 0, :].detach().numpy()),
+                                              axis=0)
+                test_array_7 = np.concatenate((test_array_7, outputs.hidden_states[7][:, 0, :].detach().numpy()),
+                                              axis=0)
+                test_array_9 = np.concatenate((test_array_9, outputs.hidden_states[9][:, 0, :].detach().numpy()),
+                                              axis=0)
+                test_array_11 = np.concatenate((test_array_11, outputs.hidden_states[11][:, 0, :].detach().numpy()),
+                                               axis=0)
+                test_array_12 = np.concatenate((test_array_12, outputs.hidden_states[12][:, 0, :].detach().numpy()),
+                                               axis=0)
+                test_label = np.concatenate((test_label, labels), axis=0)
 
-    return train_array, train_label, test_array, test_label
+    return (train_array_5, train_array_7, train_array_9, train_array_11, train_array_12, test_array_5,
+            test_array_7, test_array_9, test_array_11, test_array_12, train_label, test_label)
 
 
 ##############################
 ### load and save the data ###
 ##############################
 
-# first for FlauBERT
 
-train_fl_12, train_label_fl_12, test_fl_12, test_label_fl_12 = load_train_test_data()
+# FlauBERT
 
-with open('numpy_save/flaubert_raw_layer_12.npy', 'wb') as f:
-    np.save(f, train_fl_12)
-    np.save(f, train_label_fl_12)
-    np.save(f, test_fl_12)
-    np.save(f, test_label_fl_12)
+(tr_array_5, tr_array_7, tr_array_9, tr_array_11, tr_array_12, te_array_5,
+ te_array_7, te_array_9, te_array_11, te_array_12, tr_label, te_label) = load_train_test_data()
 
-train_fl_13, train_label_fl_13, test_fl_13, test_label_fl_13 = load_train_test_data(layer=13)
+with open('numpy_save/flaubert_raw.npy', 'wb') as f:
+    np.save(f, tr_array_5)
+    np.save(f, tr_array_7)
+    np.save(f, tr_array_9)
+    np.save(f, tr_array_11)
+    np.save(f, tr_array_12)
 
-with open('numpy_save/flaubert_raw_layer_13.npy', 'wb') as f:
-    np.save(f, train_fl_13)
-    np.save(f, train_label_fl_13)
-    np.save(f, test_fl_13)
-    np.save(f, test_label_fl_13)
+    np.save(f, te_array_5)
+    np.save(f, te_array_7)
+    np.save(f, te_array_9)
+    np.save(f, te_array_11)
+    np.save(f, te_array_12)
 
-train_fl_ft, train_label_fl_ft, test_fl_ft, test_label_fl_ft = load_train_test_data(fine_tune=True,
-                                                                                    layer=13)
+    np.save(f, tr_label)
+    np.save(f, te_label)
+
+"""
+(tr_array_5, tr_array_7, tr_array_9, tr_array_11, tr_array_12, te_array_5,
+ te_array_7, te_array_9, te_array_11, te_array_12, tr_label, te_label) = load_train_test_data(fine_tune=True)
 
 with open('numpy_save/flaubert_ft.npy', 'wb') as f:
-    np.save(f, train_fl_ft)
-    np.save(f, train_label_fl_ft)
-    np.save(f, test_fl_ft)
-    np.save(f, test_label_fl_ft)
+    np.save(f, tr_array_5)
+    np.save(f, tr_array_7)
+    np.save(f, tr_array_9)
+    np.save(f, tr_array_11)
+    np.save(f, tr_array_12)
 
-# then for CamemBERT
+    np.save(f, te_array_5)
+    np.save(f, te_array_7)
+    np.save(f, te_array_9)
+    np.save(f, te_array_11)
+    np.save(f, te_array_12)
 
-train_cb_12, train_label_cb_12, test_cb_12, test_label_cb_12 = load_train_test_data(model_type="camembert")
+    np.save(f, tr_label)
+    np.save(f, te_label)
+    
 
-with open('numpy_save/camembert_raw_layer_12.npy', 'wb') as f:
-    np.save(f, train_cb_12)
-    np.save(f, train_label_cb_12)
-    np.save(f, test_cb_12)
-    np.save(f, test_label_cb_12)
+# CamemBERT
 
-train_cb_13, train_label_cb_13, test_cb_13, test_label_cb_13 = load_train_test_data(model_type="camembert",
-                                                                                    layer=13)
+(tr_array_5, tr_array_7, tr_array_9, tr_array_11, tr_array_12, te_array_5,
+ te_array_7, te_array_9, te_array_11, te_array_12, tr_label, te_label) = load_train_test_data(model_type="camembert")
 
-with open('numpy_save/camembert_raw_layer_13.npy', 'wb') as f:
-    np.save(f, train_cb_13)
-    np.save(f, train_label_cb_13)
-    np.save(f, test_cb_13)
-    np.save(f, test_label_cb_13)
+with open('numpy_save/camembert_raw.npy', 'wb') as f:
+    np.save(f, tr_array_5)
+    np.save(f, tr_array_7)
+    np.save(f, tr_array_9)
+    np.save(f, tr_array_11)
+    np.save(f, tr_array_12)
 
-train_cb_ft, train_label_cb_ft, test_cb_ft, test_label_cb_ft = load_train_test_data(model_type="camembert",
-                                                                                    fine_tune=True,
-                                                                                    layer=13)
+    np.save(f, te_array_5)
+    np.save(f, te_array_7)
+    np.save(f, te_array_9)
+    np.save(f, te_array_11)
+    np.save(f, te_array_12)
+
+    np.save(f, tr_label)
+    np.save(f, te_label)
+
+(tr_array_5, tr_array_7, tr_array_9, tr_array_11, tr_array_12, te_array_5,
+ te_array_7, te_array_9, te_array_11, te_array_12, tr_label, te_label) = load_train_test_data(model_type="camembert",
+                                                                                              fine_tune=True)
 
 with open('numpy_save/camembert_ft.npy', 'wb') as f:
-    np.save(f, train_cb_ft)
-    np.save(f, train_label_cb_ft)
-    np.save(f, test_cb_ft)
-    np.save(f, test_label_cb_ft)
+    np.save(f, tr_array_5)
+    np.save(f, tr_array_7)
+    np.save(f, tr_array_9)
+    np.save(f, tr_array_11)
+    np.save(f, tr_array_12)
+
+    np.save(f, te_array_5)
+    np.save(f, te_array_7)
+    np.save(f, te_array_9)
+    np.save(f, te_array_11)
+    np.save(f, te_array_12)
+
+    np.save(f, tr_label)
+    np.save(f, te_label)
+"""
