@@ -202,7 +202,7 @@ with open('numpy_save/flaubert_raw.npy', 'wb') as f:
     np.save(f, tr_label)
     np.save(f, te_label)
 
-"""
+
 (tr_array_5, tr_array_7, tr_array_9, tr_array_11, tr_array_12, te_array_5,
  te_array_7, te_array_9, te_array_11, te_array_12, tr_label, te_label) = load_train_test_data(fine_tune=True)
 
@@ -263,4 +263,3 @@ with open('numpy_save/camembert_ft.npy', 'wb') as f:
 
     np.save(f, tr_label)
     np.save(f, te_label)
-"""
